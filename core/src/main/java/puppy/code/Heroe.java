@@ -4,91 +4,96 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+/**
+ * REQUISITO GM1.4 -> extends EntidadJuego (Esta es la Hija 1)
+ * REQUISITO GM1.5 -> implements Colisionable (Esta es la Implementa 1)
+ */
+public class Heroe extends EntidadJuego implements Colisionable {
 
-public class Heroe {
-	   private Rectangle bucket;
-	   private Texture bucketImage;
-	   private Sound sonidoHerido;
-	   private int vidas = 3;
-	   private int puntos = 0;
-	   private int velx = 400;
-	   private boolean herido = false;
-	   private int tiempoHeridoMax=50;
-	   private int tiempoHerido;
-	   
-	   
-	   public Heroe(Texture tex, Sound ss) {
-		   bucketImage = tex;
-		   sonidoHerido = ss;
-	   }
-	   
-		public int getVidas() {
-			return vidas;
-		}
-	
-		public int getPuntos() {
-			return puntos;
-		}
-		public Rectangle getArea() {
-			return bucket;
-		}
-		public void sumarPuntos(int pp) {
-			puntos+=pp;
-		}
-		
-	
-	   public void crear() {
-		      bucket = new Rectangle();
-		      bucket.x = 800 / 2 - 64 / 2;
-		      bucket.y = 20;
-		      bucket.width = 64;
-		      bucket.height = 64;
-	   }
-	   public void dañar() {
-		  vidas--;
-		  herido = true;
-		  tiempoHerido=tiempoHeridoMax;
-		  sonidoHerido.play();
-	   }
-	   public void dibujar(SpriteBatch batch) {
-		 if (!herido)  
-		   batch.draw(bucketImage, bucket.x, bucket.y);
-		 else {
-		
-		   batch.draw(bucketImage, bucket.x, bucket.y+ MathUtils.random(-5,5));
-		   tiempoHerido--;
-		   if (tiempoHerido<=0) herido = false;
-		 }
-	   } 
-	   
-	   
-	   public void actualizarMovimiento() { 
-		   // movimiento desde mouse/touch
-		   /*if(Gdx.input.isTouched()) {
-			      Vector3 touchPos = new Vector3();
-			      touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-			      camera.unproject(touchPos);
-			      bucket.x = touchPos.x - 64 / 2;
-			}*/
-		   //movimiento desde teclado
-		   if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) bucket.x -= velx * Gdx.graphics.getDeltaTime();
-		   if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) bucket.x += velx * Gdx.graphics.getDeltaTime();
-		   // que no se salga de los bordes izq y der
-		   if(bucket.x < 0) bucket.x = 0;
-		   if(bucket.x > 800 - 64) bucket.x = 800 - 64;
-	   }
-	    
+    private Sound sonidoHerido;
+    private int vidas;
+    private int puntos;
+    private boolean herido;
+    private boolean puedeMoverseVertical = false; 
 
-	public void destruir() {
-		    bucketImage.dispose();
-	   }
-	
-   public boolean estaHerido() {
-	   return herido;
-   }
-	   
+    public Heroe(Texture imagen, Sound sonidoHerido) {
+        super(imagen, Gdx.graphics.getWidth() / 2 - imagen.getWidth() / 2, 20); 
+        this.sonidoHerido = sonidoHerido;
+        this.vidas = 3;
+        this.puntos = 0;
+        this.herido = false;
+    }
+    
+    /**
+     * REGLA GM1.4 CUMPLIDA: Método 'abstract' implementado.
+     */
+    @Override
+    public void actualizar(float delta) {
+        // La lógica de movimiento está en actualizarMovimiento()
+    }
+
+    /**
+     * REGLA GM1.5 CUMPLIDA: Método 'interface' implementado.
+     */
+    @Override
+    public boolean colisionaCon(Rectangle otro) {
+        return this.hitbox.overlaps(otro);
+    }
+    
+    public void actualizarMovimiento() {
+        // Movimiento Horizontal
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+            hitbox.x -= 400 * Gdx.graphics.getDeltaTime();
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+            hitbox.x += 400 * Gdx.graphics.getDeltaTime();
+        }
+
+        // Movimiento Vertical (solo si puedeMoverseVertical es true)
+        if (puedeMoverseVertical) {
+            if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+                hitbox.y += 400 * Gdx.graphics.getDeltaTime();
+            }
+            if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+                hitbox.y -= 400 * Gdx.graphics.getDeltaTime();
+            }
+        }
+
+        // Límites de pantalla
+        if (hitbox.x < 0) hitbox.x = 0;
+        if (hitbox.x > 800 - hitbox.width) hitbox.x = 800 - hitbox.width;
+        // (Puedes añadir límites Y aquí si quieres)
+    }
+
+    public void permitirMovimientoVertical() {
+        this.puedeMoverseVertical = true;
+    }
+    
+    public int getVidas() { return vidas; }
+    public void restarVida() { 
+        this.vidas--; 
+        this.herido = true;
+        sonidoHerido.play();
+    }
+    
+    public int getPuntos() { return puntos; }
+    public void sumarPuntos(int cantidad) {
+        this.puntos += cantidad;
+    }
+    
+    public boolean estaHerido() { 
+        if(this.herido) {
+            this.herido = false; 
+            return true;
+        }
+        return false;
+    }
+    
+    public void destruir() {
+        sonidoHerido.dispose();
+    }
 }
+

@@ -48,12 +48,6 @@ public class GameScreen implements Screen {
                     // camera
                     camera = new OrthographicCamera();
                     camera.setToOrtho(false, 800, 480);
-
-                    // 'batch' se inicializa desde this.batch, no necesitas 'new SpriteBatch()' aquí.
-
-                    // 4. Llama a los métodos 'crear()'
-                    // (Asegurense de que las clases Heroe y ControladorProyectiles aún tengan 
-                    heroe.crear();
                     controladorProyectiles.crear();
             }
 
@@ -75,7 +69,7 @@ public class GameScreen implements Screen {
             // ------------------------------------
 
             //dibujar textos (El resto de tu código queda igual)
-            font.draw(batch, "Gotas totales: " + heroe.getPuntos(), 5, 475);
+            font.draw(batch, "Puntos: " + heroe.getPuntos(), 5, 475);
             font.draw(batch, "Vidas : " + heroe.getVidas(), 670, 475);
             font.draw(batch, "HighScore : " + game.getHigherScore(), camera.viewportWidth / 2 - 50, 475);
 
@@ -94,7 +88,7 @@ public class GameScreen implements Screen {
             }
 
             heroe.dibujar(batch);
-            controladorProyectiles.actualizarDibujoLluvia(batch);
+            controladorProyectiles.dibujarProyectiles(batch);
 
             batch.end(); // <-- dibujor termina
         }
@@ -129,7 +123,8 @@ public class GameScreen implements Screen {
 	public void dispose() {
         heroe.destruir();
         controladorProyectiles.destruir();
+        backgroundTexture.dispose();
 
-	}
+    }
 
 }
