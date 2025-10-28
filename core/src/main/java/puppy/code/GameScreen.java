@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -12,76 +13,91 @@ import com.badlogic.gdx.utils.ScreenUtils;
 
 public class GameScreen implements Screen {
 	final GameLluviaMenu game;
-    private OrthographicCamera camera;
+        private OrthographicCamera camera;
 	private SpriteBatch batch;	   
 	private BitmapFont font;
-	private Tarro tarro;
-	private Lluvia lluvia;
+	private Heroe heroe;
+	private ControladorProyectiles controladorProyectiles;
+        private Texture backgroundTexture; // <-- Linea para el fondo
 
 	   
 	//boolean activo = true;
 
-	public GameScreen(final GameLluviaMenu game) {
-		this.game = game;
-        this.batch = game.getBatch();
-        this.font = game.getFont();
-		  // load the images for the droplet and the bucket, 64x64 pixels each 	     
-		  Sound hurtSound = Gdx.audio.newSound(Gdx.files.internal("hurt.ogg"));
-		  tarro = new Tarro(new Texture(Gdx.files.internal("bucket.png")),hurtSound);
-         
-	      // load the drop sound effect and the rain background "music" 
-         Texture gota = new Texture(Gdx.files.internal("drop.png"));
-         Texture gotaMala = new Texture(Gdx.files.internal("dropBad.png"));
-         
-         Sound dropSound = Gdx.audio.newSound(Gdx.files.internal("drop.wav"));
-        
-	     Music rainMusic = Gdx.audio.newMusic(Gdx.files.internal("rain.mp3"));
-         lluvia = new Lluvia(gota, gotaMala, dropSound, rainMusic);
-	      
-	      // camera
-	      camera = new OrthographicCamera();
-	      camera.setToOrtho(false, 800, 480);
-	      batch = new SpriteBatch();
-	      // creacion del tarro
-	      tarro.crear();
-	      
-	      // creacion de la lluvia
-	      lluvia.crear();
-	}
+            public GameScreen(final GameLluviaMenu game) {
+                    this.game = game;
+                    this.batch = game.getBatch();
+                    this.font = game.getFont();
+
+                    // Carga los assets usando los NUEVOS nombres de tu assets.txt
+
+                    // 1. Carga los sonidos
+                    Sound sonidoHerido = Gdx.audio.newSound(Gdx.files.internal("sonido_herido.ogg"));
+                    Sound sonidoMoneda = Gdx.audio.newSound(Gdx.files.internal("sonido_moneda.wav"));
+                    Music musicaFondo = Gdx.audio.newMusic(Gdx.files.internal("musica_fondo.mp3"));
+
+                    // 2. Carga las texturas
+                    Texture texturaHeroe = new Texture(Gdx.files.internal("heroe.png"));
+                    Texture texturaMoneda = new Texture(Gdx.files.internal("moneda.png"));
+                    Texture texturaBolaFuego = new Texture(Gdx.files.internal("bola_fuego.png"));
+                    backgroundTexture = new Texture(Gdx.files.internal("fondo_castillo.png"));
+
+                    // 3. Crea los objetos
+                    heroe = new Heroe(texturaHeroe, sonidoHerido);
+                    controladorProyectiles = new ControladorProyectiles(texturaMoneda, texturaBolaFuego, sonidoMoneda, musicaFondo);
+
+                    // camera
+                    camera = new OrthographicCamera();
+                    camera.setToOrtho(false, 800, 480);
+
+                    // 'batch' se inicializa desde this.batch, no necesitas 'new SpriteBatch()' aquí.
+
+                    // 4. Llama a los métodos 'crear()'
+                    // (Asegurense de que las clases Heroe y ControladorProyectiles aún tengan 
+                    heroe.crear();
+                    controladorProyectiles.crear();
+            }
 
 	@Override
 	public void render(float delta) {
-		//limpia la pantalla con color azul obscuro.
-		ScreenUtils.clear(0, 0, 0.2f, 1);
-		//actualizar matrices de la cámara
-		camera.update();
-		//actualizar 
-		batch.setProjectionMatrix(camera.combined);
-		batch.begin();
-		//dibujar textos
-		font.draw(batch, "Gotas totales: " + tarro.getPuntos(), 5, 475);
-		font.draw(batch, "Vidas : " + tarro.getVidas(), 670, 475);
-		font.draw(batch, "HighScore : " + game.getHigherScore(), camera.viewportWidth/2-50, 475);
-		
-		if (!tarro.estaHerido()) {
-			// movimiento del tarro desde teclado
-	        tarro.actualizarMovimiento();        
-			// caida de la lluvia 
-	       if (!lluvia.actualizarMovimiento(tarro)) {
-	    	  //actualizar HigherScore
-	    	  if (game.getHigherScore()<tarro.getPuntos())
-	    		  game.setHigherScore(tarro.getPuntos());  
-	    	  //ir a la ventana de finde juego y destruir la actual
-	    	  game.setScreen(new GameOverScreen(game));
-	    	  dispose();
-	       }
-		}
-		
-		tarro.dibujar(batch);
-		lluvia.actualizarDibujoLluvia(batch);
-		
-		batch.end();
-	}
+            //limpia la pantalla con color azul obscuro.
+            // ScreenUtils.clear(0, 0, 0.2f, 1); //borramos la línea del color azul
+            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT); //Dejamos esta para limpiar
+
+            //actualizar matrices de la cámara
+            camera.update();
+            //actualizar 
+            batch.setProjectionMatrix(camera.combined);
+
+            batch.begin(); //dibujo comienza
+
+            // Dibuja el fondo, estirándolo a 800x480 (el tamaño de la cámara)
+            batch.draw(backgroundTexture, 0, 0, 800, 480);
+            // ------------------------------------
+
+            //dibujar textos (El resto de tu código queda igual)
+            font.draw(batch, "Gotas totales: " + heroe.getPuntos(), 5, 475);
+            font.draw(batch, "Vidas : " + heroe.getVidas(), 670, 475);
+            font.draw(batch, "HighScore : " + game.getHigherScore(), camera.viewportWidth / 2 - 50, 475);
+
+            if (!heroe.estaHerido()) {
+                // movimiento del tarro desde teclado
+                heroe.actualizarMovimiento();
+                // caida de la lluvia 
+                if (!controladorProyectiles.actualizarMovimiento(heroe)) {
+                    //actualizar HigherScore
+                    if (game.getHigherScore() < heroe.getPuntos())
+                        game.setHigherScore(heroe.getPuntos());
+                    //ir a la ventana de finde juego y destruir la actual
+                    game.setScreen(new GameOverScreen(game));
+                    dispose();
+                }
+            }
+
+            heroe.dibujar(batch);
+            controladorProyectiles.actualizarDibujoLluvia(batch);
+
+            batch.end(); // <-- dibujor termina
+        }
 
 	@Override
 	public void resize(int width, int height) {
@@ -90,7 +106,7 @@ public class GameScreen implements Screen {
 	@Override
 	public void show() {
 	  // continuar con sonido de lluvia
-	  lluvia.continuar();
+	  controladorProyectiles.continuar();
 	}
 
 	@Override
@@ -100,7 +116,7 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void pause() {
-		lluvia.pausar();
+		controladorProyectiles.pausar();
 		game.setScreen(new PausaScreen(game, this)); 
 	}
 
@@ -111,8 +127,8 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void dispose() {
-      tarro.destruir();
-      lluvia.destruir();
+        heroe.destruir();
+        controladorProyectiles.destruir();
 
 	}
 
