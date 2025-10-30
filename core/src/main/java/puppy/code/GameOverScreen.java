@@ -5,31 +5,42 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 
 public class GameOverScreen implements Screen {
-	private final GameLluviaMenu game;
+	private final DungeonKnightGame game;
 	private SpriteBatch batch;	   
 	private BitmapFont font;
 	private OrthographicCamera camera;
+        private Texture backgroundTexture;
 
-	public GameOverScreen(final GameLluviaMenu game) {
+	public GameOverScreen(final DungeonKnightGame game) {
 		this.game = game;
         this.batch = game.getBatch();
         this.font = game.getFont();
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 800, 480);
+                backgroundTexture = new Texture(Gdx.files.internal("fondo_gameover.png"));
 	}
 
 	@Override
 	public void render(float delta) {
-		ScreenUtils.clear(0, 0, 0.2f, 1);
+            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+            
 		camera.update();
 		batch.setProjectionMatrix(camera.combined);
 
 		batch.begin();
-		font.draw(batch, "GAME OVER ", 100, 200);
-		font.draw(batch, "Toca en cualquier lado para reiniciar.", 100, 100);
+                batch.draw(backgroundTexture, 0, 0, 800, 480);
+                
+                font.getData().setScale(2.5f, 2.5f);
+		font.draw(batch, "Tu aventura termina aquí...", 180, 290);
+                
+                font.getData().setScale(1.5f, 1.5f);
+		font.draw(batch, "Toca en cualquier lado para reiniciar.", 180, 200);
+                
+                font.getData().setScale(1, 1);
 		batch.end();
 
 		if (Gdx.input.isTouched()) {
@@ -71,7 +82,7 @@ public class GameOverScreen implements Screen {
 	@Override
 	public void dispose() {
 		// TODO Auto-generated method stub
-		
+		backgroundTexture.dispose();
 	}
 
 }

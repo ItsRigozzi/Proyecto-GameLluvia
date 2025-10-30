@@ -22,7 +22,7 @@ public class Heroe extends EntidadJuego implements Colisionable {
     public Heroe(Texture imagen, Sound sonidoHerido) {
         super(imagen, Gdx.graphics.getWidth() / 2 - imagen.getWidth() / 2, 20); 
         this.sonidoHerido = sonidoHerido;
-        this.vidas = 3;
+        this.vidas = 5;
         this.puntos = 0;
         this.herido = false;
     }

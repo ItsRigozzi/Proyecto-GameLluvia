@@ -2,7 +2,9 @@ package puppy.code;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -10,31 +12,39 @@ import com.badlogic.gdx.utils.ScreenUtils;
 
 public class MainMenuScreen implements Screen {
 
-	final GameLluviaMenu game;
+	final DungeonKnightGame game;
 	private SpriteBatch batch;
 	private BitmapFont font;
 	private OrthographicCamera camera;
+        
+        private Texture backgroundTexture;
 
-	public MainMenuScreen(final GameLluviaMenu game) {
-		this.game = game;
-        this.batch = game.getBatch();
-        this.font = game.getFont();
-		camera = new OrthographicCamera();
-		camera.setToOrtho(false, 800, 480);
+	public MainMenuScreen(final DungeonKnightGame game) {
+            this.game = game;
+            this.batch = game.getBatch();
+            this.font = game.getFont();
+            camera = new OrthographicCamera();
+            camera.setToOrtho(false, 800, 480);
+            backgroundTexture = new Texture(Gdx.files.internal("fondo_menu.png"));
 	}
 
 	@Override
 	public void render(float delta) {
-		ScreenUtils.clear(0, 0, 0.2f, 1);
-
+                Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+                
 		camera.update();
 		batch.setProjectionMatrix(camera.combined);
 
 		batch.begin();
+                batch.draw(backgroundTexture, 0, 0, 800, 480);
+                
 		font.getData().setScale(2, 2);
-		font.draw(batch, "Aventura del Caballero!!! ", 100, camera.viewportHeight/2+50);
-		font.draw(batch, "Toca en cualquier lugar para comenzar!", 100, camera.viewportHeight/2-50);
-
+		font.draw(batch, "Aventura del Caballero!!! ", 300, 320);
+                
+                font.getData().setScale(1.5f, 1.5f);
+		font.draw(batch, "Toca en cualquier lugar para comenzar!", 220, 80);
+                
+                font.getData().setScale(1, 1);
 		batch.end();
 
 		if (Gdx.input.isTouched()) {
@@ -76,7 +86,7 @@ public class MainMenuScreen implements Screen {
 	@Override
 	public void dispose() {
 		// TODO Auto-generated method stub
-		
+		backgroundTexture.dispose();
 	}
 
 }

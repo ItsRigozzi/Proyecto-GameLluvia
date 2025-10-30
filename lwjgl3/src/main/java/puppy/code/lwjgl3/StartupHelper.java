@@ -16,7 +16,6 @@
 
 package puppy.code.lwjgl3;
 
-import org.lwjgl.system.macosx.LibC;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -83,12 +82,6 @@ public class StartupHelper {
             return false;
         }
 
-        long pid = LibC.getpid();
-
-        // check whether -XstartOnFirstThread is enabled
-        if ("1".equals(System.getenv("JAVA_STARTED_ON_FIRST_THREAD_" + pid))) {
-            return false;
-        }
 
         // check whether the JVM was previously restarted
         // avoids looping, but most certainly leads to a crash
@@ -118,7 +111,7 @@ public class StartupHelper {
         jvmArgs.addAll(ManagementFactory.getRuntimeMXBean().getInputArguments());
         jvmArgs.add("-cp");
         jvmArgs.add(System.getProperty("java.class.path"));
-        String mainClass = System.getenv("JAVA_MAIN_CLASS_" + pid);
+        String mainClass = System.getenv("JAVA_MAIN_CLASS_");
         if (mainClass == null) {
             StackTraceElement[] trace = Thread.currentThread().getStackTrace();
             if (trace.length > 0) {

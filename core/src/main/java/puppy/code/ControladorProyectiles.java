@@ -11,8 +11,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 
 public class ControladorProyectiles {
-	private Array<Rectangle> posicionesProyectiles;
-	private Array<Integer> tiposProyectiles;
+        private Array<EntidadJuego> proyectiles;
         private long ultimoProyectilTiempo;
         private Texture texturaMoneda;
         private Texture texturaBolaFuego;
@@ -27,8 +26,7 @@ public class ControladorProyectiles {
 	}
 	
 	public void crear() {
-		posicionesProyectiles = new Array<Rectangle>();
-		tiposProyectiles = new Array<Integer>();
+                proyectiles = new Array<EntidadJuego>();
 		crearProyectil();
 	      // start the playback of the background music immediately
 	      musicaFondo.setLooping(true);
@@ -36,60 +34,65 @@ public class ControladorProyectiles {
 	}
 	
 	private void crearProyectil() {
-	      Rectangle proyectil = new Rectangle();
-	      proyectil.x = MathUtils.random(0, 800-64);
-	      proyectil.y = 480;
-	      proyectil.width = 64;
-	      proyectil.height = 64;
-	      posicionesProyectiles.add(proyectil);
-	      // ver el tipo de gota
-	      if (MathUtils.random(1,10)<5)	    	  
-	         tiposProyectiles.add(1);
-	      else 
-	    	 tiposProyectiles.add(2);
-	      ultimoProyectilTiempo = TimeUtils.nanoTime();
+            float xPos = MathUtils.random(0, 800-64);
+	    
+	    EntidadJuego nuevoProyectil;
+	    
+	    // CAMBIO 3: Creamos objetos reales (Moneda o BolaFuego)
+	    if (MathUtils.random(1,10) < 5) {
+	    	// Menos del 50% de probabilidad: Bola de Fuego (Malo)
+	    	nuevoProyectil = new BolaFuego(texturaBolaFuego, xPos, 480);
+	    } else {
+	    	// El resto: Moneda (Bueno)
+	    	nuevoProyectil = new Moneda(texturaMoneda, xPos, 480);
+	    }
+	    
+	    proyectiles.add(nuevoProyectil);
+	    ultimoProyectilTiempo = TimeUtils.nanoTime();
 	   }
 	
    public boolean actualizarMovimiento(Heroe heroe) { 
-	   // generar gotas de lluvia 
+            // generar gotas de lluvia 
 	   if(TimeUtils.nanoTime() - ultimoProyectilTiempo > 100000000) crearProyectil();
-	  
 	   
-	   // revisar si las gotas cayeron al suelo o chocaron con el tarro
-	   for (int i=0; i < posicionesProyectiles.size; i++ ) {
-		  Rectangle raindrop = posicionesProyectiles.get(i);
-	      raindrop.y -= 300 * Gdx.graphics.getDeltaTime();
-	      //cae al suelo y se elimina
-	      if(raindrop.y + 64 < 0) {
-	    	  posicionesProyectiles.removeIndex(i); 
-	    	  tiposProyectiles.removeIndex(i);
-	      }
-	      if(raindrop.overlaps(heroe.getHitbox())) { //la gota choca con el tarro
-	    	if(tiposProyectiles.get(i)==1) { // gota dañina
-	    	  heroe.restarVida();
-	    	  if (heroe.getVidas()<=0)
-	    		 return false; // si se queda sin vidas retorna falso /game over
-	    	  posicionesProyectiles.removeIndex(i);
-	          tiposProyectiles.removeIndex(i);
-	      	}else { // gota a recolectar
-	    	  heroe.sumarPuntos(10);
-	          sonidoMoneda.play();
-	          posicionesProyectiles.removeIndex(i);
-	          tiposProyectiles.removeIndex(i);
-	      	}
-	      }
-	   } 
-	  return true; 
+	   for (int i=0; i < proyectiles.size; i++ ) {
+		   EntidadJuego proyectil = proyectiles.get(i);
+		   
+		   // 4. ACTUALIZACIÓN POLIMÓRFICA: 
+		   // Cada proyectil se mueve según su propia lógica (Moneda.actualizar o BolaFuego.actualizar)
+		   proyectil.actualizar(Gdx.graphics.getDeltaTime());
+		   
+		   // Eliminar si cae al suelo
+		   if(proyectil.getHitbox().y + proyectil.getHitbox().height < 0) {
+		 	   proyectiles.removeIndex(i);
+		 	   i--;
+		 	   continue; // Pasamos a la siguiente iteración
+		   }
+		   
+		   // 5. REVISAR COLISIÓN
+		   if(proyectil.getHitbox().overlaps(heroe.getHitbox())) { 
+			   
+			   if(proyectil instanceof BolaFuego) { // Colisión con Bola de Fuego (Mala)
+		 	 	   heroe.restarVida();
+		 	 	   if (heroe.getVidas() <= 0)
+		 	 		   return false;
+			   } else if (proyectil instanceof Moneda) { // Colisión con Moneda (Buena)
+		 	 	   heroe.sumarPuntos(10);
+		 	 	   sonidoMoneda.play();
+			   }
+			   
+			   proyectiles.removeIndex(i);
+			   i--;
+		   }
+            }
+	   return true; 
    }
    
    public void dibujarProyectiles(SpriteBatch batch) { 
-	   
-	  for (int i=0; i < posicionesProyectiles.size; i++ ) {
-		  Rectangle raindrop = posicionesProyectiles.get(i);
-		  if(tiposProyectiles.get(i)==1) // gota dañina
-	         batch.draw(texturaBolaFuego, raindrop.x, raindrop.y); 
-		  else
-			 batch.draw(texturaMoneda, raindrop.x, raindrop.y); 
+            // DIBUJO POLIMÓRFICO: Ya no necesitamos saber si es Moneda o Bola de Fuego,
+	    // el método dibujar() de EntidadJuego lo hace por nosotros.
+	    for (EntidadJuego proyectil : proyectiles) {
+	        proyectil.dibujar(batch);
 	   }
    }
    public void destruir() {
