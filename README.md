@@ -1,9 +1,5 @@
 # ⚔️ Dungeon Knight
 
-![GitHub Language Count](https://img.shields.io/github/languages/count/TU_USUARIO/DungeonKnight)
-![GitHub Top Language](https://img.shields.io/github/languages/top/TU_USUARIO/DungeonKnight)
-![GitHub Last Commit](https://img.shields.com/github/last-commit/TU_USUARIO/DungeonKnight)
-
 **Dungeon Knight** es un videojuego de supervivencia y recolección desarrollado en **Java** con la biblioteca **LibGDX** y el sistema de construcción **Gradle**. El proyecto fue diseñado priorizando una arquitectura limpia y escalable.
 
 ## 🕹️ El Juego: Desafío y Controles
