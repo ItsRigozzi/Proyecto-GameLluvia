@@ -26,8 +26,13 @@ public class GameScreen implements Screen {
         private boolean enTransicionFase2 = false;
         private float tiempoTransicion = 3.0f;
         private Texture texturaEscudo;
-        private Texture texturaHeroeAura;
         private Texture texturaVelocidad;
+        private Texture heroeParadoLado;
+        private Texture heroeParadoFrente;
+        private Texture heroeCaminarLado1;
+        private Texture heroeCaminarLado2;
+        private Texture heroeCaminarFrente1;
+        private Texture heroeCaminarFrente2;
 
 	   
 	//boolean activo = true;
@@ -45,7 +50,6 @@ public class GameScreen implements Screen {
                     Music musicaFondo = Gdx.audio.newMusic(Gdx.files.internal("musica_fondo.mp3"));
 
                     // 2. Carga las texturas
-                    Texture texturaHeroe = new Texture(Gdx.files.internal("heroe.png"));
                     Texture texturaMoneda = new Texture(Gdx.files.internal("moneda.png"));
                     Texture texturaBolaFuego = new Texture(Gdx.files.internal("bola_fuego.png"));
                     backgroundTexture = new Texture(Gdx.files.internal("fondo_castillo.png"));
@@ -53,11 +57,16 @@ public class GameScreen implements Screen {
                     texturaBolaFuegoAzul = new Texture(Gdx.files.internal("bola_fuego_azul.png"));
                     texturaCura = new Texture(Gdx.files.internal("cura.png"));
                     texturaEscudo = new Texture(Gdx.files.internal("escudo.png"));
-                    texturaHeroeAura = new Texture(Gdx.files.internal("heroe_aura.png"));
                     texturaVelocidad = new Texture(Gdx.files.internal("velocidad.png"));
+                    heroeParadoLado = new Texture(Gdx.files.internal("parado_lado.png"));
+                    heroeParadoFrente = new Texture(Gdx.files.internal("parado_frente.png"));
+                    heroeCaminarLado1 = new Texture(Gdx.files.internal("caminar_lado1.png"));
+                    heroeCaminarLado2 = new Texture(Gdx.files.internal("caminar_lado2.png"));
+                    heroeCaminarFrente1 = new Texture(Gdx.files.internal("caminar_frente1.png"));
+                    heroeCaminarFrente2 = new Texture(Gdx.files.internal("caminar_frente2.png"));
 
                     // 3. Crea los objetos
-                    heroe = new Heroe(texturaHeroe, texturaHeroeAura, sonidoHerido);
+                    heroe = new Heroe(heroeParadoLado, heroeParadoFrente, heroeCaminarLado1, heroeCaminarLado2, heroeCaminarFrente1, heroeCaminarFrente2, sonidoHerido);
                     controladorProyectiles = new ControladorProyectiles(texturaMoneda, texturaBolaFuego, texturaBolaFuegoAzul, texturaCura, texturaEscudo, texturaVelocidad, sonidoMoneda, musicaFondo);
 
                     // camera
@@ -111,6 +120,7 @@ public class GameScreen implements Screen {
 	    }
 	    
 	    heroe.dibujar(batch);
+	    
 	    controladorProyectiles.dibujarProyectiles(batch);
 	    
 	    batch.end();
