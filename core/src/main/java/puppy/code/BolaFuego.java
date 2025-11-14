@@ -1,16 +1,16 @@
 package puppy.code;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 
 /**
- * REQUISITO GM1.4 -> extends EntidadJuego (Hija 3)
- * REQUISITO GM1.5 -> implements Colisionable (Implementa 3)
+ * REQUISITO GM1.4: extends EntidadJuego (Implementación de Template Method GM2.2)
+ * REQUISITO GM1.5: implements Colisionable
+ * REQUISITO GM2.2: Aplicación del Patrón de Diseño Template Method (Clase Concreta).
+ * * * * Esta clase implementa el método abstracto 'actualizar' de la plantilla EntidadJuego.
  */
 public class BolaFuego extends EntidadJuego implements Colisionable {
     
-    // La velocidad de caída es más rápida que la moneda (350 vs 200)
     private static final float VELOCIDAD_CAIDA = 350; 
     
     public BolaFuego(Texture img, float x, float y) {
@@ -18,16 +18,16 @@ public class BolaFuego extends EntidadJuego implements Colisionable {
     }
 
     /**
-     * Define cómo se mueve la Bola de Fuego (cae rápidamente)
+     * (GM1.4 / GM2.2) Implementación del método abstracto 'actualizar'.
+     * Define la lógica de movimiento específica para esta entidad.
      */
     @Override
     public void actualizar(float delta) {
-        // Mueve la Bola de Fuego hacia abajo
         hitbox.y -= VELOCIDAD_CAIDA * delta;
     }
 
     /**
-     * Define la colisión.
+     * (GM1.5) Implementación del método de la interfaz Colisionable.
      */
     @Override
     public boolean colisionaCon(Rectangle otro) {

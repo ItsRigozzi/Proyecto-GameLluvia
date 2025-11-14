@@ -19,7 +19,6 @@ public class MoverConWASD implements MovimientoStrategy {
     @Override
     public void mover(Heroe heroe, float delta) {
         
-        // Lógica de movimiento horizontal
         if (Gdx.input.isKeyPressed(Input.Keys.A)) {
             heroe.hitbox.x -= 400 * delta;
         }
@@ -27,7 +26,6 @@ public class MoverConWASD implements MovimientoStrategy {
             heroe.hitbox.x += 400 * delta;
         }
 
-        // Lógica de movimiento vertical (revisa el estado del Héroe)
         if (heroe.isPuedeMoverseVertical()) {
             if (Gdx.input.isKeyPressed(Input.Keys.W)) {
                 heroe.hitbox.y += 400 * delta;

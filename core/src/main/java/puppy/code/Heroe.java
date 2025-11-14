@@ -2,15 +2,14 @@ package puppy.code;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.graphics.Color;
 
 /**
  * REQUISITO GM1.4: extends EntidadJuego (Implementación de Template Method GM2.2)
@@ -26,12 +25,14 @@ public class Heroe extends EntidadJuego implements Colisionable {
     private int vidas;
     private int puntos;
     private boolean herido;
-    public boolean puedeMoverseVertical = false; // Público para que las Estrategias lo vean
+    public boolean puedeMoverseVertical = false; 
     private Preferences prefs;
     private boolean estaBrillando = false;
     private float tiempoBrillo = 0;
     private boolean esInmune = false;
     private float tiempoInmunidad = 0f;
+    private boolean estaEnSlowMo = false;
+    private float tiempoSlowMo = 0f;
     
     private enum Estado {QUIETO_FRENTE, QUIETO_LADO, CAMINANDO_FRENTE, CAMINANDO_LADO}
     private Animation<TextureRegion> animCaminarLado;
@@ -40,7 +41,7 @@ public class Heroe extends EntidadJuego implements Colisionable {
     private TextureRegion paradoFrente;
     
     private Estado estadoActual = Estado.QUIETO_LADO;
-    private float tiempoEstado; // Temporizador para saber qué frame mostrar
+    private float tiempoEstado; 
     private boolean mirandoDerecha = true;
 
 
@@ -59,24 +60,19 @@ public class Heroe extends EntidadJuego implements Colisionable {
         this.herido = false;
         this.prefs = Gdx.app.getPreferences("dungeonknight_settings");
         
-     // 1. Guardar los fotogramas "Parado"
         this.paradoLado = new TextureRegion(paradoLadoTex);
         this.paradoFrente = new TextureRegion(paradoFrenteTex);
         
-        // 2. Crear la animación "Caminar Lado"
         Array<TextureRegion> framesLado = new Array<TextureRegion>();
         framesLado.add(new TextureRegion(caminarLado1Tex));
         framesLado.add(new TextureRegion(caminarLado2Tex));
-        // 0.25f = duración de cada frame (puedes ajustar este número)
         animCaminarLado = new Animation<TextureRegion>(0.25f, framesLado, Animation.PlayMode.LOOP);
 
-        // 3. Crear la animación "Caminar Frente"
         Array<TextureRegion> framesFrente = new Array<TextureRegion>();
         framesFrente.add(new TextureRegion(caminarFrente1Tex));
         framesFrente.add(new TextureRegion(caminarFrente2Tex));
         animCaminarFrente = new Animation<TextureRegion>(0.25f, framesFrente, Animation.PlayMode.LOOP);
 
-        // 4. Estado inicial
         
         this.tiempoEstado = 0f;
         
@@ -89,7 +85,6 @@ public class Heroe extends EntidadJuego implements Colisionable {
      */
     @Override
     public void actualizar(float delta) {
-        // La lógica de movimiento está en actualizarMovimiento()
     }
 
     /**
@@ -102,9 +97,8 @@ public class Heroe extends EntidadJuego implements Colisionable {
     
     public void actualizarMovimiento() {
         
-    	// 1. Lee la preferencia guardada (0=Flechas, 1=WASD)
         int controlMode = prefs.getInteger("controlMode", 0);
-        float delta = Gdx.graphics.getDeltaTime(); // Obtiene el tiempo
+        float delta = Gdx.graphics.getDeltaTime(); 
 
         /**
          * (GM2.3) Delegación de la Estrategia.
@@ -112,12 +106,10 @@ public class Heroe extends EntidadJuego implements Colisionable {
          * a la estrategia actual (stratFlechas o stratWASD) que ejecute
          * el algoritmo de movimiento correspondiente.
          */
-     // 1. Reseteamos el estado asumiendo que está quieto
         boolean estaMoviendoVertical = false;
         boolean estaMoviendoHorizontal = false;
         
-        // 2. Lee la preferencia guardada y actualiza el estado
-        if (controlMode == 0) { // MODO FLECHAS
+        if (controlMode == 0) { 
             if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
                 estaMoviendoHorizontal = true;
                 mirandoDerecha = false;
@@ -130,9 +122,9 @@ public class Heroe extends EntidadJuego implements Colisionable {
                 estaMoviendoVertical = true;
             }
             
-            stratFlechas.mover(this, delta); // Llama a la estrategia
+            stratFlechas.mover(this, delta); 
             
-        } else { // MODO WASD
+        } else { 
             if (Gdx.input.isKeyPressed(Input.Keys.A)) {
                 estaMoviendoHorizontal = true;
                 mirandoDerecha = false;
@@ -145,10 +137,9 @@ public class Heroe extends EntidadJuego implements Colisionable {
                 estaMoviendoVertical = true;
             }
             
-            stratWASD.mover(this, delta); // Llama a la estrategia
+            stratWASD.mover(this, delta); 
         }
 
-        // 3. Decide el estado final de la animación
         if (estaMoviendoVertical) {
             estadoActual = Estado.CAMINANDO_FRENTE;
             
@@ -156,7 +147,6 @@ public class Heroe extends EntidadJuego implements Colisionable {
             estadoActual = Estado.CAMINANDO_LADO;
             
         } else {
-            // Si no se mueve, quédate quieto en la última dirección que mirabas
         	
             if (estadoActual == Estado.CAMINANDO_FRENTE || estadoActual == Estado.QUIETO_FRENTE) {
                 estadoActual = Estado.QUIETO_FRENTE;
@@ -165,11 +155,9 @@ public class Heroe extends EntidadJuego implements Colisionable {
             }
         }
         
-        // 4. Avanza el temporizador de la animación
         tiempoEstado += delta;
         
 
-        // Límites de pantalla (se quedan igual)
         if (hitbox.x < 0) hitbox.x = 0;
         if (hitbox.x > 800 - hitbox.width) hitbox.x = 800 - hitbox.width;
         
@@ -215,11 +203,9 @@ public class Heroe extends EntidadJuego implements Colisionable {
     
     @Override
     public void dibujar(SpriteBatch batch) {
-    	
-    	// --- 1. SELECCIONAR EL FRAME DE ANIMACIÓN (¡EL FIX!) ---
+
         TextureRegion currentFrame = null; 
         
-        // ESTE BLOQUE FALTABA EN EL CÓDIGO ANTERIOR
         switch (estadoActual) {
             case QUIETO_FRENTE:
                 currentFrame = paradoFrente;
@@ -234,11 +220,7 @@ public class Heroe extends EntidadJuego implements Colisionable {
                 currentFrame = animCaminarLado.getKeyFrame(tiempoEstado, true);
                 break;
         }
-        // --- FIN DEL FIX ---
 
-
-        // --- 2. LÓGICA DE VOLTEAR (FLIP) ---
-        // (Esta línea ya no dará NullPointerException)
         if (mirandoDerecha && !currentFrame.isFlipX()) {
             currentFrame.flip(true, false);
         }
@@ -247,40 +229,35 @@ public class Heroe extends EntidadJuego implements Colisionable {
         }
         
         
-        // --- 3. LÓGICA DE DIBUJO Y EFECTOS ---
         
         if (estaBrillando) {
-            // A. Flash Rosado (Cura)
             batch.setColor(com.badlogic.gdx.graphics.Color.PINK);
-            
             tiempoBrillo -= Gdx.graphics.getDeltaTime();
             if (tiempoBrillo <= 0) estaBrillando = false;
         
         } else if (esInmune) {
-            
-            // B. Silueta Amarilla (Gruesa)
-            float offset = 4.0f; // Grosor del borde
-            
-            batch.setColor(1.0f, 1.0f, 0.0f, 1.0f); // Color en rgb = N°/255 -> (R, G, B, Alpha)
+            float offset = 4.0f; 
+            batch.setColor(1.0f, 1.0f, 0.0f, 1.0f); 
 
-            // Dibuja las 4 copias desplazadas (la silueta)
-            batch.draw(currentFrame, hitbox.x - offset, hitbox.y, hitbox.width, hitbox.height); // Izquierda
-            batch.draw(currentFrame, hitbox.x + offset, hitbox.y, hitbox.width, hitbox.height); // Derecha
-            batch.draw(currentFrame, hitbox.x, hitbox.y - offset, hitbox.width, hitbox.height); // Abajo
-            batch.draw(currentFrame, hitbox.x, hitbox.y + offset, hitbox.width, hitbox.height); // Arriba
+            batch.draw(currentFrame, hitbox.x - offset, hitbox.y, hitbox.width, hitbox.height); 
+            batch.draw(currentFrame, hitbox.x + offset, hitbox.y, hitbox.width, hitbox.height); 
+            batch.draw(currentFrame, hitbox.x, hitbox.y - offset, hitbox.width, hitbox.height); 
+            batch.draw(currentFrame, hitbox.x, hitbox.y + offset, hitbox.width, hitbox.height); 
 
-            // Quita el tinte
             batch.setColor(com.badlogic.gdx.graphics.Color.WHITE); 
             
-            // Actualiza el temporizador
             tiempoInmunidad -= Gdx.graphics.getDeltaTime();
             if (tiempoInmunidad <= 0) esInmune = false;
         }
         
-        // Dibuja al Héroe animado ENCIMA de la silueta (o normal)
+        if (estaEnSlowMo) {
+            tiempoSlowMo -= Gdx.graphics.getDeltaTime();
+            if (tiempoSlowMo <= 0) estaEnSlowMo = false;
+        }
+
+        
         batch.draw(currentFrame, hitbox.x, hitbox.y, hitbox.width, hitbox.height);
 
-        // Resetea el color (por si el flash rosado o la silueta lo cambiaron)
         batch.setColor(com.badlogic.gdx.graphics.Color.WHITE);
     }
     
@@ -293,15 +270,28 @@ public class Heroe extends EntidadJuego implements Colisionable {
         return this.esInmune;
     }
     
-    /**
-     * Getter público para que las Estrategias (MoverConFlechas)
-     * puedan leer el estado de movimiento vertical.
-     */
     public boolean isPuedeMoverseVertical() {
         return this.puedeMoverseVertical;
     }
     
     public void destruir() {
         sonidoHerido.dispose();
+    }
+    
+    public void activarSlowMo() {
+        this.estaEnSlowMo = true;
+        this.tiempoSlowMo = 7.0f;
+    }
+
+    public boolean estaEnSlowMo() {
+        return this.estaEnSlowMo;
+    }
+
+    public float getTiempoSlowMo() {
+        return this.tiempoSlowMo;
+    }
+
+    public float getTiempoInmunidad() {
+        return this.tiempoInmunidad;
     }
 }

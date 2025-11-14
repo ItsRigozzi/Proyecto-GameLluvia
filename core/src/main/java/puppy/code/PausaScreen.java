@@ -2,12 +2,9 @@ package puppy.code;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.utils.ScreenUtils;
-
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
@@ -18,12 +15,13 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 
 public class PausaScreen implements Screen {
-
+	
+	@SuppressWarnings("unused")
 	private final DungeonKnightGame game;
+	@SuppressWarnings("unused")
 	private final GameScreen juego;
 	private SpriteBatch batch;	   
 	private BitmapFont font;
-	private OrthographicCamera camera;
 	private Stage stage;
     private Skin skin;
 
@@ -87,13 +85,12 @@ public class PausaScreen implements Screen {
         restartButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                // Crea una NUEVA pantalla de juego (empieza de cero)
+
                 game.setScreen(new GameScreen(game)); 
                 dispose();
             }
         });
         
-        // Botón SALIR (al Menú)
         exitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -124,37 +121,33 @@ public class PausaScreen implements Screen {
 
 	@Override
 	public void show() {
-		// TODO Auto-generated method stub
+
 		Gdx.input.setInputProcessor(stage);
 	}
 
 	@Override
 	public void resize(int width, int height) {
-		// TODO Auto-generated method stub
+
 		stage.getViewport().update(width, height, true);
 	}
 
 	@Override
 	public void pause() {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void resume() {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void hide() {
-		// TODO Auto-generated method stub
 		Gdx.input.setInputProcessor(null);
 	}
 
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
 		skin.dispose();
         stage.dispose();
 	}

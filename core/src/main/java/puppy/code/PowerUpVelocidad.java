@@ -8,7 +8,6 @@ import com.badlogic.gdx.math.Rectangle;
  */
 public class PowerUpVelocidad extends EntidadJuego implements Colisionable {
     
-    // Cae a una velocidad media
     private static final float VELOCIDAD_CAIDA = 180; 
     
     public PowerUpVelocidad(Texture img, float x, float y) {
@@ -17,7 +16,6 @@ public class PowerUpVelocidad extends EntidadJuego implements Colisionable {
 
     @Override
     public void actualizar(float delta) {
-        // Se mueve usando el 'delta' (que será modificado por el controlador)
         hitbox.y -= VELOCIDAD_CAIDA * delta;
     }
 

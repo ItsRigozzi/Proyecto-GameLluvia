@@ -8,7 +8,6 @@ import com.badlogic.gdx.math.Rectangle;
  */
 public class PowerUpVida extends EntidadJuego implements Colisionable {
     
-    // Cae un poco más lento que las monedas
     private static final float VELOCIDAD_CAIDA = 150; 
     
     public PowerUpVida(Texture img, float x, float y) {

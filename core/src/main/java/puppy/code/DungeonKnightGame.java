@@ -20,7 +20,7 @@ public class DungeonKnightGame extends Game {
     private BitmapFont font;
     
 	private Preferences prefs;
-    public int[] highScores; // Array público para guardar el Top 3
+    public int[] highScores; 
 
 	@Override
 	public void create() {
@@ -31,14 +31,12 @@ public class DungeonKnightGame extends Game {
 		batch = new SpriteBatch();
 		font = new BitmapFont(); 
         
-        // Carga el archivo de guardado
         prefs = Gdx.app.getPreferences("dungeonknight_settings");
         
-        // Inicializa el array de puntajes y carga los valores guardados
         highScores = new int[3];
-        highScores[0] = prefs.getInteger("score1", 0); // Top 1
-        highScores[1] = prefs.getInteger("score2", 0); // Top 2
-        highScores[2] = prefs.getInteger("score3", 0); // Top 3
+        highScores[0] = prefs.getInteger("score1", 0); 
+        highScores[1] = prefs.getInteger("score2", 0); 
+        highScores[2] = prefs.getInteger("score3", 0); 
         
         /**
          * (GM2.1) El Singleton inyecta su propia instancia (this) en la 
@@ -47,55 +45,38 @@ public class DungeonKnightGame extends Game {
 		this.setScreen(new MainMenuScreen(this));
 	}
 
-    /**
-     * Revisa si un nuevo puntaje entra en el Top 3 y lo guarda.
-     * @param newScore El puntaje final del jugador.
-     */
 	public void checkAndSaveScore(int newScore) {
-        // No guardamos puntajes de 0
         if (newScore <= 0) {
             return;
         }
         
-        // Guardamos los puntajes actuales antes de moverlos
         int oldScore1 = highScores[0];
         int oldScore2 = highScores[1];
 
-        // 1. Revisa si es mejor que el #1
         if (newScore > oldScore1) {
-            highScores[0] = newScore;  // Nuevo #1
-            highScores[1] = oldScore1; // Antiguo #1 baja a #2
-            highScores[2] = oldScore2; // Antiguo #2 baja a #3
+            highScores[0] = newScore;  
+            highScores[1] = oldScore1; 
+            highScores[2] = oldScore2; 
         } 
-        // 2. Si no es #1, revisa si es mejor que el #2
         else if (newScore > oldScore2) {
-            highScores[1] = newScore;  // Nuevo #2
-            highScores[2] = oldScore2; // Antiguo #2 baja a #3
+            highScores[1] = newScore;  
+            highScores[2] = oldScore2; 
         } 
-        // 3. Si no es #1 ni #2, revisa si es mejor que el #3
         else if (newScore > highScores[2]) {
-            highScores[2] = newScore;  // Nuevo #3
+            highScores[2] = newScore;  
         }
         
 
-        // 4. Guardar los nuevos puntajes en el disco
         prefs.putInteger("score1", highScores[0]);
         prefs.putInteger("score2", highScores[1]);
         prefs.putInteger("score3", highScores[2]);
-        prefs.flush(); // Aplica el guardado
+        prefs.flush(); 
     }
 
-    /**
-     * Devuelve la lista de los 3 mejores puntajes.
-     * @return un array de int[3]
-     */
     public int[] getHighScores() {
         return this.highScores;
     }
     
-    /**
-     * Devuelve solo el mejor puntaje (Top 1) para el HUD.
-     */
     public int getTopScore() {
         return this.highScores[0];
     }
@@ -126,5 +107,4 @@ public class DungeonKnightGame extends Game {
 	public BitmapFont getFont() {
 		return font;
 	}
-    
 }

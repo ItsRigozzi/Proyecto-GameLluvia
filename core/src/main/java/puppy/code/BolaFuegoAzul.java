@@ -4,11 +4,14 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 
 /**
- * Proyectil de Fase 2. Quita 2 vidas.
+ * REQUISITO GM1.4: extends EntidadJuego (Implementación de Template Method GM2.2)
+ * REQUISITO GM1.5: implements Colisionable
+ * REQUISITO GM2.2: Aplicación del Patrón de Diseño Template Method (Clase Concreta).
+ * * * * Esta clase (un enemigo de Fase 2) implementa el método abstracto 'actualizar'
+ * * de la plantilla EntidadJuego.
  */
 public class BolaFuegoAzul extends EntidadJuego implements Colisionable {
     
-    // Una velocidad diferente para que sea más amenazante
     private static final float VELOCIDAD_CAIDA = 380; 
     
     public BolaFuegoAzul(Texture img, float x, float y) {
@@ -16,7 +19,8 @@ public class BolaFuegoAzul extends EntidadJuego implements Colisionable {
     }
 
     /**
-     * Define cómo se mueve la Bola de Fuego Azul
+     * (GM1.4 / GM2.2) Implementación del método abstracto 'actualizar'.
+     * Define la lógica de movimiento específica para esta entidad.
      */
     @Override
     public void actualizar(float delta) {
@@ -24,7 +28,7 @@ public class BolaFuegoAzul extends EntidadJuego implements Colisionable {
     }
 
     /**
-     * Define la colisión.
+     * (GM1.5) Implementación del método de la interfaz Colisionable.
      */
     @Override
     public boolean colisionaCon(Rectangle otro) {

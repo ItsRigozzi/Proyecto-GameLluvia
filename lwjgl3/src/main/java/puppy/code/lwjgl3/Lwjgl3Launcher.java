@@ -11,7 +11,8 @@ public class Lwjgl3Launcher {
     public static void main(String[] args) {
         createApplication();
     }
- // Aquí se crea la única instancia (Singleton) de DungeonKnightGame
+ /** Aquí se crea la única instancia (Singleton) de DungeonKnightGame*/
+    
     private static Lwjgl3Application createApplication() {
         return new Lwjgl3Application(new DungeonKnightGame(), getDefaultConfiguration());
     }

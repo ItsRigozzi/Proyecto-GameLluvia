@@ -17,6 +17,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 public class Fase2Screen implements Screen {
 
     final DungeonKnightGame game;
+    @SuppressWarnings("unused")
     private final GameScreen gameScreen;
     private SpriteBatch batch;
     private Stage stage;
@@ -36,7 +37,6 @@ public class Fase2Screen implements Screen {
         stage = new Stage(new ScreenViewport());
         skin = new Skin();
 
-        // --- Cargar Assets ---
         backgroundTexture = new Texture(Gdx.files.internal("pergamino.png"));
         fanfare = Gdx.audio.newMusic(Gdx.files.internal("fase2.mp3"));
         fanfare.setLooping(false);
@@ -121,25 +121,20 @@ public class Fase2Screen implements Screen {
         batch.setProjectionMatrix(stage.getCamera().combined);
         
         batch.begin();
-        // Dibuja el fondo de pergamino
         batch.draw(backgroundTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-        // --- TÍTULO ---
         font.getData().setScale(3);
-        font.draw(batch, "¡Llegaste a la Fase 2!", 200, 440); // Subimos un poco el título
+        font.draw(batch, "¡Llegaste a la Fase 2!", 200, 440); 
 
         if (mostrandoDetalles) {
             
-            // --- 1. MUESTRA LOS DETALLES ---
             font.getData().setScale(1.5f);
-            // Subimos la posición Y a 380 para que no tape los botones
             font.draw(batch, "Nuevas Amenazas:\n- Fuego Azul (Quita 2 Vidas)\n\n" +
                              "Nuevas Habilidades:\n- Movimiento Libre (Vertical)\n- Power-Ups Habilitados", 
-                             250, 380); // <-- POSICIÓN CORREGIDA
+                             250, 380); 
 
         } else {
-            font.getData().setScale(1.8f); // Un poco más grande
-            // Posicionamos el texto de introducción donde estaban los detalles antes
+            font.getData().setScale(1.8f); 
             font.draw(batch, "Tu aventura evoluciona.\n\nPresiona (i) para ver los detalles...", 
                              200, 340);
         }
@@ -147,7 +142,6 @@ public class Fase2Screen implements Screen {
         font.getData().setScale(1);
         batch.end();
         
-        // Dibuja los botones (el stage)
         stage.act(delta);
         stage.draw();
     }

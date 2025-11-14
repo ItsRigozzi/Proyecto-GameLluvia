@@ -21,9 +21,7 @@ public abstract class EntidadJuego {
     protected Rectangle hitbox;
     protected Texture imagen;
 
-    /**
-     * Constructor base (plantilla) para todas las entidades.
-     */
+    
     public EntidadJuego(Texture img, float x, float y) {
         this.imagen = img;
         this.hitbox = new Rectangle(x, y, img.getWidth(), img.getHeight());
@@ -47,10 +45,7 @@ public abstract class EntidadJuego {
         batch.draw(imagen, hitbox.x, hitbox.y);
     }
     
-    /**
-     * Getter público para que otras clases (Contexto) puedan
-     * revisar la colisión respetando el encapsulamiento.
-     */
+    
     public Rectangle getHitbox() { 
         return hitbox; 
     }

@@ -10,7 +10,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.utils.ScreenUtils;
 
 public class GameScreen implements Screen {
 	final DungeonKnightGame game;
@@ -19,12 +18,10 @@ public class GameScreen implements Screen {
 	private BitmapFont font;
 	private Heroe heroe;
 	private ControladorProyectiles controladorProyectiles;
-        private Texture backgroundTexture; // <-- Linea para el fondo
+        private Texture backgroundTexture; 
         private Texture fondoFase2;
         private Texture texturaBolaFuegoAzul;
         private Texture texturaCura;
-        private boolean enTransicionFase2 = false;
-        private float tiempoTransicion = 3.0f;
         private Texture texturaEscudo;
         private Texture texturaVelocidad;
         private Texture heroeParadoLado;
@@ -35,21 +32,16 @@ public class GameScreen implements Screen {
         private Texture heroeCaminarFrente2;
 
 	   
-	//boolean activo = true;
-
             public GameScreen(final DungeonKnightGame game) {
                     this.game = game;
                     this.batch = game.getBatch();
                     this.font = game.getFont();
 
-                    // Carga los assets usando los NUEVOS nombres de tu assets.txt
 
-                    // 1. Carga los sonidos
                     Sound sonidoHerido = Gdx.audio.newSound(Gdx.files.internal("sonido_herido.ogg"));
                     Sound sonidoMoneda = Gdx.audio.newSound(Gdx.files.internal("sonido_moneda.wav"));
                     Music musicaFondo = Gdx.audio.newMusic(Gdx.files.internal("musica_fondo.mp3"));
 
-                    // 2. Carga las texturas
                     Texture texturaMoneda = new Texture(Gdx.files.internal("moneda.png"));
                     Texture texturaBolaFuego = new Texture(Gdx.files.internal("bola_fuego.png"));
                     backgroundTexture = new Texture(Gdx.files.internal("fondo_castillo.png"));
@@ -65,11 +57,9 @@ public class GameScreen implements Screen {
                     heroeCaminarFrente1 = new Texture(Gdx.files.internal("caminar_frente1.png"));
                     heroeCaminarFrente2 = new Texture(Gdx.files.internal("caminar_frente2.png"));
 
-                    // 3. Crea los objetos
                     heroe = new Heroe(heroeParadoLado, heroeParadoFrente, heroeCaminarLado1, heroeCaminarLado2, heroeCaminarFrente1, heroeCaminarFrente2, sonidoHerido);
                     controladorProyectiles = new ControladorProyectiles(texturaMoneda, texturaBolaFuego, texturaBolaFuegoAzul, texturaCura, texturaEscudo, texturaVelocidad, sonidoMoneda, musicaFondo);
 
-                    // camera
                     camera = new OrthographicCamera();
                     camera.setToOrtho(false, 800, 480);
                     controladorProyectiles.crear();
@@ -82,8 +72,8 @@ public class GameScreen implements Screen {
 	    batch.setProjectionMatrix(camera.combined);
 
 	    if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-	        pause(); // Llama al método pause() que arreglamos
-	        return; // Detiene la ejecución de este frame
+	        pause(); 
+	        return; 
 	    }
 	    
 	    batch.begin();
@@ -98,19 +88,29 @@ public class GameScreen implements Screen {
 	    font.draw(batch, "Puntos: " + heroe.getPuntos(), 5, 475);
 	    font.draw(batch, "Vidas : " + heroe.getVidas(), 670, 475);
 	    font.draw(batch, "HighScore : " + game.getTopScore(), camera.viewportWidth / 2 - 50, 475);
+	    
+	    if (heroe.esInmune()) {
+	        batch.draw(texturaEscudo, 10, 400, 50, 50); 
+	        
+	        font.draw(batch, String.format("%.1f", heroe.getTiempoInmunidad()), 70, 435);
+	    }
+
+	    if (heroe.estaEnSlowMo()) {
+	        batch.draw(texturaVelocidad, 10, 340, 50, 50); 
+	        
+	        font.draw(batch, String.format("%.1f", heroe.getTiempoSlowMo()), 70, 375);
+	    }
 
 	    if (!heroe.estaHerido()) {
 	        heroe.actualizarMovimiento();
 
 	        if (!controladorProyectiles.isFase2() && heroe.getPuntos() >= 50) {
 	            
-	            // Pausa el juego y cambia a la pantalla de transición
 	            game.setScreen(new Fase2Screen(game, this)); 
 	            controladorProyectiles.limpiarProyectiles();
 	            
 	        } else {
 	            if (!controladorProyectiles.actualizarMovimiento(heroe)) {
-	                // (Lógica de Game Over...)
 	            	game.checkAndSaveScore(heroe.getPuntos());
 
 	            	game.setScreen(new GameOverScreen(game));
@@ -133,7 +133,6 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void show() {
-	  // continuar con sonido de lluvia
 	  controladorProyectiles.continuar();
 	  Gdx.input.setInputProcessor(null);
 	}

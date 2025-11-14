@@ -2,13 +2,11 @@ package puppy.code;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.utils.ScreenUtils;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
@@ -16,24 +14,33 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-//En MainMenuScreen.java -> constructor
+/**
+ * REQUISITO GM2.1: Aplicación del Patrón de Diseño Singleton (Cliente).
+ * * * * Esta clase actúa como un "Cliente" del Singleton (DungeonKnightGame).
+ * * Recibe la instancia única del juego para acceder a los recursos globales.
+ */
 public class MainMenuScreen implements Screen {
 
 	final DungeonKnightGame game;
 	private SpriteBatch batch;
 	private BitmapFont font;
-	private OrthographicCamera camera;
     private Texture backgroundTexture;
     private Music musicaMenu;
     private Stage stage;
     private Skin skin;
 
 	public MainMenuScreen(final DungeonKnightGame game) {
-		// Recibimos la instancia única (Singleton GM2.1) del juego
+            /**
+             * (GM2.1) Se recibe la instancia única (Singleton) de DungeonKnightGame
+             * en el constructor.
+             */
             this.game = game;
-        // Usamos los recursos globales del Singleton
-            this.batch = game.getBatch();
             
+            /**
+             * (GM2.1) Se accede a los recursos globales (batch y font)
+             * gestionados por el Singleton.
+             */
+            this.batch = game.getBatch();
             this.font = game.getFont();
             
             stage = new Stage(new ScreenViewport());
@@ -93,15 +100,12 @@ public class MainMenuScreen implements Screen {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT); 
 	    batch.setProjectionMatrix(stage.getCamera().combined);
 
-	    // 1. Dibuja el fondo
 	    batch.begin();
 	    batch.draw(backgroundTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-	    // --- AÑADE ESTE BLOQUE PARA MOSTRAR EL TOP 3 ---
-	    int[] scores = game.getHighScores(); // Obtiene los puntajes
+	    int[] scores = game.getHighScores(); 
 
 	    font.getData().setScale(1.5f);
-	    // Posiciona el Top 3 en la esquina inferior izquierda
 	    font.draw(batch, "MEJORES PUNTAJES:", 20, 150);
 	    font.draw(batch, "1. " + scores[0], 20, 110);
 	    font.draw(batch, "2. " + scores[1], 20, 80);
@@ -110,51 +114,40 @@ public class MainMenuScreen implements Screen {
 
 	    batch.end();
 
-	    // 2. Dibuja el escenario (botones)
 	    stage.act(delta); 
 	    stage.draw();     
 	}
 
 	@Override
 	public void show() {
-		// TODO Auto-generated method stub
 		musicaMenu.play();
 		Gdx.input.setInputProcessor(stage);
-		
 	}
 
 	@Override
 	public void resize(int width, int height) {
-		// TODO Auto-generated method stub
 		stage.getViewport().update(width, height, true);
 	}
 
 	@Override
 	public void pause() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void resume() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void hide() {
-		// TODO Auto-generated method stub
 		Gdx.input.setInputProcessor(null);
 	}
 
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
 		musicaMenu.stop();
         musicaMenu.dispose();
         backgroundTexture.dispose();
         skin.dispose();
         stage.dispose();
 	}
-
 }

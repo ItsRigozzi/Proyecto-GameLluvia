@@ -2,12 +2,11 @@ package puppy.code;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
@@ -16,10 +15,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class GameOverScreen implements Screen {
+	@SuppressWarnings("unused")
 	private final DungeonKnightGame game;
 	private SpriteBatch batch;	   
 	private BitmapFont font;
-	private OrthographicCamera camera;
     private Texture backgroundTexture;
     private Music musicaGameOver;
     private Stage stage;
@@ -61,14 +60,14 @@ public class GameOverScreen implements Screen {
         restartButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new GameScreen(game)); // Vuelve a jugar
+                game.setScreen(new GameScreen(game)); 
                 dispose(); 
             }
         });
         exitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new MainMenuScreen(game)); // Vuelve al menú
+                game.setScreen(new MainMenuScreen(game)); 
                 dispose();
             }
         });
@@ -102,38 +101,32 @@ public class GameOverScreen implements Screen {
 
 	@Override
 	public void show() {
-		// TODO Auto-generated method stub
 		musicaGameOver.play();
         Gdx.input.setInputProcessor(stage);
 	}
 
 	@Override
 	public void resize(int width, int height) {
-		// TODO Auto-generated method stub
 		stage.getViewport().update(width, height, true);
 	}
 
 	@Override
 	public void pause() {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void resume() {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void hide() {
-		// TODO Auto-generated method stub
 		Gdx.input.setInputProcessor(null);
 	}
 
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
 		musicaGameOver.stop();
         musicaGameOver.dispose();
         backgroundTexture.dispose();

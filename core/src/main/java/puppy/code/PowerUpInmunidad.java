@@ -8,7 +8,6 @@ import com.badlogic.gdx.math.Rectangle;
  */
 public class PowerUpInmunidad extends EntidadJuego implements Colisionable {
     
-    // Cae a la misma velocidad que la cura
     private static final float VELOCIDAD_CAIDA = 150; 
     
     public PowerUpInmunidad(Texture img, float x, float y) {

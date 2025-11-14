@@ -19,7 +19,6 @@ public class MoverConFlechas implements MovimientoStrategy {
     @Override
     public void mover(Heroe heroe, float delta) {
         
-        // Lógica de movimiento horizontal
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
             heroe.hitbox.x -= 400 * delta;
         }
@@ -27,7 +26,6 @@ public class MoverConFlechas implements MovimientoStrategy {
             heroe.hitbox.x += 400 * delta;
         }
 
-        // Lógica de movimiento vertical (revisa el estado del Héroe)
         if (heroe.isPuedeMoverseVertical()) {
             if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
                 heroe.hitbox.y += 400 * delta;

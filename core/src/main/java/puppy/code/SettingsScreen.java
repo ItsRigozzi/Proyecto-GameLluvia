@@ -1,6 +1,7 @@
 package puppy.code;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -12,11 +13,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.badlogic.gdx.Preferences;
 
 public class SettingsScreen implements Screen {
 
 	final DungeonKnightGame game;
+	@SuppressWarnings("unused")
     private final Screen previousScreen; 
     private SpriteBatch batch;
     private Stage stage;
