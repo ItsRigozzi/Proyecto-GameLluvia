@@ -14,8 +14,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+/**
+ * REQUISITO GM2.1: Aplicación del Patrón de Diseño Singleton (Cliente).
+ * * * * Esta clase actúa como un "Cliente" del Singleton (DungeonKnightGame).
+ * * Recibe la instancia única del juego para gestionar la navegación (volver a jugar o salir).
+ */
 public class GameOverScreen implements Screen {
-	@SuppressWarnings("unused")
+
 	private final DungeonKnightGame game;
 	private SpriteBatch batch;	   
 	private BitmapFont font;
@@ -25,6 +30,9 @@ public class GameOverScreen implements Screen {
     private Skin skin;
 
 	public GameOverScreen(final DungeonKnightGame game) {
+        /**
+         * (GM2.1) Se recibe la instancia única (Singleton) de DungeonKnightGame.
+         */
 		this.game = game;
         this.batch = game.getBatch();
         this.font = game.getFont();
@@ -133,5 +141,4 @@ public class GameOverScreen implements Screen {
         skin.dispose();
         stage.dispose();
 	}
-
 }

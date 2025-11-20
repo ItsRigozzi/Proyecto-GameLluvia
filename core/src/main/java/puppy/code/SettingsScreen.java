@@ -14,6 +14,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+/**
+ * REQUISITO GM2.1: Aplicación del Patrón de Diseño Singleton (Cliente).
+ * * * * Esta clase actúa como un "Cliente" del Singleton (DungeonKnightGame).
+ * * Recibe la instancia única del juego para acceder a los recursos globales (batch, font)
+ * * y gestionar la persistencia de las preferencias de control.
+ */
 public class SettingsScreen implements Screen {
 
 	final DungeonKnightGame game;
@@ -27,6 +33,9 @@ public class SettingsScreen implements Screen {
     private String controlSeleccionado;
 
     public SettingsScreen(final DungeonKnightGame game, final Screen previousScreen) {
+        /**
+         * (GM2.1) Se recibe la instancia única (Singleton) de DungeonKnightGame.
+         */
     	this.game = game;
         this.previousScreen = previousScreen;
         this.batch = game.getBatch();
@@ -93,7 +102,6 @@ public class SettingsScreen implements Screen {
             }
         });
         
-        // Botón WASD
         wasdButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {

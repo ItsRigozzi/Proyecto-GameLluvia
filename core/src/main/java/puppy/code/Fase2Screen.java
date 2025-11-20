@@ -14,6 +14,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+/**
+ * REQUISITO GM2.1: Aplicación del Patrón de Diseño Singleton (Cliente).
+ * * * * Esta clase actúa como un "Cliente" del Singleton (DungeonKnightGame).
+ * * Recibe la instancia única del juego para acceder a los recursos compartidos (batch, font)
+ * * y gestionar la navegación entre pantallas.
+ */
 public class Fase2Screen implements Screen {
 
     final DungeonKnightGame game;
@@ -29,6 +35,9 @@ public class Fase2Screen implements Screen {
     private boolean mostrandoDetalles = false;
 
     public Fase2Screen(final DungeonKnightGame game, final GameScreen gameScreen) {
+        /**
+         * (GM2.1) Se recibe la instancia única (Singleton) de DungeonKnightGame.
+         */
         this.game = game;
         this.gameScreen = gameScreen;
         this.batch = game.getBatch();

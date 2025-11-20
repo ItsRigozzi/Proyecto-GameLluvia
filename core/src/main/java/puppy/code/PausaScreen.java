@@ -13,7 +13,12 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-
+/**
+ * REQUISITO GM2.1: Aplicación del Patrón de Diseño Singleton (Cliente).
+ * * * * Esta clase actúa como un "Cliente" del Singleton (DungeonKnightGame).
+ * * Recibe la instancia única del juego para acceder a los recursos compartidos (batch, font)
+ * * y gestionar la navegación.
+ */
 public class PausaScreen implements Screen {
 	
 	@SuppressWarnings("unused")
@@ -26,6 +31,10 @@ public class PausaScreen implements Screen {
     private Skin skin;
 
 	public PausaScreen (final DungeonKnightGame game, GameScreen juego) {
+        /**
+         * (GM2.1) Se recibe la instancia única (Singleton) de DungeonKnightGame.
+         * Esto permite utilizar el SpriteBatch y BitmapFont globales.
+         */
 		this.game = game;
         this.juego = juego;
         this.batch = game.getBatch();
@@ -94,7 +103,7 @@ public class PausaScreen implements Screen {
         exitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new MainMenuScreen(game)); // Vuelve al menú
+                game.setScreen(new MainMenuScreen(game)); 
                 dispose();
             }
         });
@@ -153,4 +162,3 @@ public class PausaScreen implements Screen {
 	}
 
 }
-

@@ -1,6 +1,5 @@
 package puppy.code;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
@@ -8,8 +7,21 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
+import com.badlogic.gdx.Gdx;
 
+/**
+ * REQUISITO GM2.2: Aplicación del Patrón de Diseño Template Method (Contexto).
+ * * * * Esta clase (ControladorProyectiles) actúa como el "Contexto" que utiliza
+ * * las clases concretas (Moneda, BolaFuego, etc.) que implementan la plantilla
+ * * abstracta EntidadJuego. Demuestra el Polimorfismo al manejar una
+ * * única lista de 'EntidadJuego'.
+ */
 public class ControladorProyectiles {
+        
+        /**
+         * (GM2.2) Almacena una colección de la clase abstracta (EntidadJuego)
+         * para manejar todos los proyectiles de forma polimórfica.
+         */
         private Array<EntidadJuego> proyectiles;
         private long ultimoProyectilTiempo;
         private Texture texturaMoneda;
@@ -34,7 +46,7 @@ public class ControladorProyectiles {
         }
 	
 	public void crear() {
-                proyectiles = new Array<EntidadJuego>();
+        proyectiles = new Array<EntidadJuego>();
 		crearProyectil(null);
 	      musicaFondo.setLooping(true);
 	      musicaFondo.play();
@@ -60,7 +72,6 @@ public class ControladorProyectiles {
 		                nuevoProyectil = new Moneda(texturaMoneda, xPos, 480);
 		            }
 		        } else if (tipo == 18 || tipo == 19) { 
-		            
 		            
 		            if (heroe != null && heroe.esInmune()) {
 		                nuevoProyectil = new Moneda(texturaMoneda, xPos, 480); 
@@ -111,6 +122,12 @@ public class ControladorProyectiles {
 	    for (int i = 0; i < proyectiles.size; i++) {
 	        EntidadJuego proyectil = proyectiles.get(i);
 	        
+            /**
+             * (GM2.2) Invocación del "Paso Variable" (Template Method).
+             * Se llama al método abstracto 'actualizar', y Java ejecuta
+             * la implementación concreta (Moneda, BolaFuego, etc.)
+             * gracias al Polimorfismo.
+             */
 	        proyectil.actualizar(delta); 
 
 	        if (proyectil.getHitbox().y + proyectil.getHitbox().height < 0) {
@@ -121,7 +138,6 @@ public class ControladorProyectiles {
 
 	        if (proyectil.getHitbox().overlaps(heroe.getHitbox())) {
 
-	            
 	            if (proyectil instanceof BolaFuego) { 
 	                if (!heroe.esInmune()) { 
 	                    heroe.restarVida(1); 
@@ -148,7 +164,6 @@ public class ControladorProyectiles {
 	                heroe.activarSlowMo();
 	            }
 	            
-
 	            proyectiles.removeIndex(i);
 	            i--; 
 	        }
@@ -158,6 +173,11 @@ public class ControladorProyectiles {
    
    public void dibujarProyectiles(SpriteBatch batch) { 
 	    for (EntidadJuego proyectil : proyectiles) {
+            /**
+             * (GM2.2) Invocación del "Paso Fijo" (Template Method).
+             * Todas las entidades usan el mismo método 'dibujar' heredado
+             * de la plantilla EntidadJuego.
+             */
 	        proyectil.dibujar(batch);
 	   }
    }

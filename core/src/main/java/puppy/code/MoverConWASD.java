@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 
 /**
- * REQUISITO GM2.3: Aplicación del Patrón de Diseño Strategy (Estrategia Concreta).
+ * REQUISITO GM2.3: Aplicación del Patrón de Diseño Strategy.
  * * * * Esta clase es la segunda "Estrategia Concreta".
  * * Define el algoritmo específico para mover al Héroe usando las teclas WASD.
  */

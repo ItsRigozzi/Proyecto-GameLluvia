@@ -5,18 +5,16 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 
 /**
- * REQUISITO GM1.4: Clase abstracta (Padre de Heroe, Moneda, etc.)
- * REQUISITO GM1.6: Encapsulamiento (protected)
- * REQUISITO GM2.2: Aplicación del Patrón de Diseño Template Method.
- * * * * Esta clase abstracta define la "plantilla" (Template Method) para todas
- * * las entidades del juego. Define el esqueleto del algoritmo (actualizar y dibujar)
- * * y deja los pasos variables (actualizar) como abstractos.
+ * REQUISITO GM2.2: Aplicación del Patrón de Diseño Template Method (Clase Abstracta).
+ * * * * Esta clase define la "plantilla" (Template) para todas las entidades del juego.
+ * * Establece la estructura del algoritmo con métodos concretos (pasos fijos)
+ * * y métodos abstractos (pasos variables) que las subclases deben implementar.
  */
 public abstract class EntidadJuego {
 
     /**
-     * (GM1.6) Atributos comunes (protected) para que las clases hijas
-     * puedan acceder a ellos directamente.
+     * Atributos protegidos para que las clases concretas (subclases)
+     * puedan acceder a ellos directamente al implementar los pasos variables.
      */
     protected Rectangle hitbox;
     protected Texture imagen;
@@ -28,18 +26,18 @@ public abstract class EntidadJuego {
     }
 
     /**
-     * REGLA (GM1.4 y GM2.2): Este es el "Paso Variable" del Patrón Template Method.
+     * (GM2.2) "Paso Variable" (Primitive Operation) del Template Method.
      * *
      * * Como método abstracto, obliga a las subclases (Heroe, Moneda, BolaFuego)
-     * * a implementar su propia lógica de movimiento y comportamiento.
+     * * a implementar su propia lógica específica de movimiento y comportamiento.
      */
     public abstract void actualizar(float delta);
 
     /**
-     * REGLA (GM2.2): Este es el "Paso Fijo" (o método concreto) del Patrón Template Method.
+     * (GM2.2) "Paso Fijo" (Concrete Operation) del Template Method.
      * *
-     * * Todas las clases hijas heredan este método de dibujo, asegurando
-     * * que todas se dibujen de la misma manera sin repetir código.
+     * * Este comportamiento es común y heredado por todas las subclases, asegurando
+     * * que la lógica de dibujado sea consistente y no se repita código.
      */
     public void dibujar(SpriteBatch batch) {
         batch.draw(imagen, hitbox.x, hitbox.y);
